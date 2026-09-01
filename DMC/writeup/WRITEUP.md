@@ -29,7 +29,7 @@ None of these alone gives the flag. The power is in chaining them.
 
 Opening `http://134.112.58.12:8000` gives a SPA. The HTML is almost empty that means all the juice in JavaScript:
 
-![DevTools showing app.js script tag](img/02_devtools_appjs.png)
+![DevTools showing app.js script tag](img/04_devtools_appjs.png)
 
 ```bash
 curl -s http://134.112.58.12:8000/js/app.js 
