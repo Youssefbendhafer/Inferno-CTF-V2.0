@@ -78,7 +78,7 @@ el.innerHTML = `
 
 Visiting a non-existent scroll like `#/scroll/99` shows what happens when the API returns an error:
 
-![Scroll page showing FILE CORRUPTED error](img/01_scroll_corrupted.png)
+![Scroll page showing FILE CORRUPTED error](img/03_scroll_corrupted.png)
 
 This also reveals something important — Express has a catch-all SPA fallback:
 
@@ -139,7 +139,7 @@ This tells us:
 
 The UI exposes an artifact submission portal:
 
-![Artifact Registration modal](img/03_upload_modal.png)
+![Artifact Registration modal](img/05_upload_modal.png)
 
 The upload endpoint is already visible in `app.js`. Testing it:
 
@@ -210,7 +210,7 @@ import sys; sys.stdout.buffer.write(b'GIF89a\x01\x00' + body.encode())
 " > /tmp/relic.gif
 ```
 
-![Building the polyglot and verifying magic bytes](img/04_polyglot_build.png)
+![Building the polyglot and verifying magic bytes](img/06_polyglot_build.png)
 
 Verify magic bytes then upload:
 
@@ -359,7 +359,7 @@ The bot's browser attaches the FLAG cookie automatically because it is a same-or
 echo "http://dantes-codex-nginx/#/scroll/$ENCODED" | nc 134.112.58.12 4000
 ```
 
-![Bot returning the flag via console.log relay](img/05_flag.png)
+![Bot returning the flag via console.log relay](img/07_flag.png)
 
 ---
 
