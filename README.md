@@ -1,6 +1,6 @@
-# Inferno CTF V2.0
+﻿# Inferno CTF V2.0
 
-## DMC � Web (Hard) � 500pts
+## DMC — Web (Hard) · 500pts
 
 > The Order of the Sword has constructed an archive of demonic intelligence recovered from the Temen-ni-gru. A cursed librarian guards the Ninth Circle.
 >
@@ -12,7 +12,7 @@
 
 ### Vulnerability Chain
 
-GIF89a Polyglot Upload ? Double-Decode CSPT ? innerHTML XSS ? Flag via console.log
+GIF89a Polyglot Upload → Double-Decode CSPT → innerHTML XSS → Flag via console.log
 
 ### Writeup
 

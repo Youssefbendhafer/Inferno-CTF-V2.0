@@ -16,7 +16,7 @@ services:
     environment:
       - PHP_HOST=php
       - PHP_PORT=8080
-      - FLAG=INFERNOCTF{w3lc0m3_t0_t3men_ni_gru_s0n_0f_sp4rd4}
+      - FLAG=${FLAG}
     depends_on:
       - php
     networks:
@@ -29,7 +29,7 @@ services:
     build: ./src/php
     container_name: dantes-codex-php
     environment:
-      - FLAG=INFERNOCTF{w3lc0m3_t0_t3men_ni_gru_s0n_0f_sp4rd4}
+      - FLAG=${FLAG}
     networks:
       - inferno
     restart: unless-stopped
@@ -40,7 +40,7 @@ services:
     build: ./src/bot
     container_name: dantes-codex-bot
     environment:
-      - FLAG=INFERNOCTF{w3lc0m3_t0_t3men_ni_gru_s0n_0f_sp4rd4}
+      - FLAG=${FLAG}
       - ENVIRONMENT=production
     ports:
       - "4000:4000"
