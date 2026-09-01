@@ -1,0 +1,56 @@
+services:
+  nginx:
+    build: ./src/nginx
+    container_name: dantes-codex-nginx
+    ports:
+      - "8000:80"
+    depends_on:
+      - app
+    networks:
+      - inferno
+    restart: unless-stopped
+
+  app:
+    build: ./src/app
+    container_name: dantes-codex-app
+    environment:
+      - PHP_HOST=php
+      - PHP_PORT=8080
+      - FLAG=INFERNOCTF{w3lc0m3_t0_t3men_ni_gru_s0n_0f_sp4rd4}
+    depends_on:
+      - php
+    networks:
+      - inferno
+    restart: unless-stopped
+    volumes:
+      - relics:/relics
+
+  php:
+    build: ./src/php
+    container_name: dantes-codex-php
+    environment:
+      - FLAG=INFERNOCTF{w3lc0m3_t0_t3men_ni_gru_s0n_0f_sp4rd4}
+    networks:
+      - inferno
+    restart: unless-stopped
+    volumes:
+      - relics:/relics
+
+  bot:
+    build: ./src/bot
+    container_name: dantes-codex-bot
+    environment:
+      - FLAG=INFERNOCTF{w3lc0m3_t0_t3men_ni_gru_s0n_0f_sp4rd4}
+      - ENVIRONMENT=production
+    ports:
+      - "4000:4000"
+    networks:
+      - inferno
+    restart: unless-stopped
+
+volumes:
+  relics:
+
+networks:
+  inferno:
+    driver: bridge

@@ -1,0 +1,722 @@
+/* ═══════════════════════════════════════════════════════
+   THE QLIPHOTH — CTF Challenge UI
+   Based on DMC5's actual visual language:
+   - Near-black bg, pure red accent, cold white text
+   - Oswald 700 for display (close to DMC mission title weight)
+   - Thin horizontal rules, parallelogram cuts, no rounded corners
+   - The Rebellion skull SVG as the primary decorative asset
+   ═══════════════════════════════════════════════════════ */
+
+:root {
+  --bg:        #080808;
+  --bg2:       #0d0d0d;
+  --bg3:       #131313;
+  --red:       #e8000a;
+  --red2:      #ff1515;
+  --red3:      #8a0006;
+  --red-glow:  rgba(232,0,10,0.08);
+  --white:     #f5f0eb;
+  --offwhite:  #c8c0b8;
+  --grey:      #555;
+  --grey2:     #888;
+  --border:    #1a1a1a;
+  --border2:   #252525;
+
+  --display:  'Oswald', sans-serif;
+  --body:     'Rajdhani', sans-serif;
+  --mono:     'Share Tech Mono', monospace;
+
+  --w: 740px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+#fx-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.45;
+}
+
+#app { position: relative; z-index: 1; min-height: 100vh; }
+
+/* ═══════════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════════ */
+.site-header {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* The actual DMC5 UI element: 3px top red bar */
+.site-header::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--red3), var(--red), var(--red2), var(--red));
+}
+
+/* Subtle diagonal geometric fill top-right — like DMC5 mission card */
+.header-bg-slash {
+  position: absolute;
+  top: 0; right: 0;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(108deg,
+    transparent 38%,
+    rgba(232,0,10,0.03) 38%,
+    rgba(232,0,10,0.03) 100%
+  );
+  pointer-events: none;
+}
+
+.header-inner {
+  max-width: var(--w);
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 2.2rem;
+  display: flex;
+  align-items: flex-end;
+  gap: 2rem;
+  position: relative;
+}
+
+/* ── Rebellion skull SVG — the one real DMC asset ── */
+.skull-mark {
+  flex-shrink: 0;
+  width: 72px;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 12px rgba(232,0,10,0.5));
+  animation: skull-pulse 4s ease-in-out infinite;
+}
+@keyframes skull-pulse {
+  0%,100% { filter: drop-shadow(0 0 10px rgba(232,0,10,0.4)); opacity: 0.9; }
+  50%      { filter: drop-shadow(0 0 22px rgba(232,0,10,0.7)); opacity: 1; }
+}
+
+.header-text { flex: 1; min-width: 0; }
+
+.site-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.35em;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+/* ── THE QLIPHOTH title — Oswald 700, huge, italic ── */
+.site-title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: clamp(2.8rem, 9vw, 6.5rem);
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--white);
+  position: relative;
+  display: block;
+}
+
+/* Glitch — fires every 6s, 4 frames only */
+.site-title::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  font-family: inherit; font-weight: inherit; font-style: inherit;
+  font-size: inherit; line-height: inherit; letter-spacing: inherit;
+  text-transform: inherit; color: var(--red);
+  clip-path: polygon(0 20%, 100% 20%, 100% 38%, 0 38%);
+  animation: gt 6s infinite;
+  opacity: 0;
+}
+.site-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  font-family: inherit; font-weight: inherit; font-style: inherit;
+  font-size: inherit; line-height: inherit; letter-spacing: inherit;
+  text-transform: inherit; color: #00d8ff;
+  clip-path: polygon(0 62%, 100% 62%, 100% 80%, 0 80%);
+  animation: gb 6s infinite 0.06s;
+  opacity: 0;
+}
+@keyframes gt {
+  0%,88%,96%,100% { opacity:0; transform:none; }
+  89% { opacity:.85; transform:translate(-5px,0); }
+  91% { opacity:.5;  transform:translate(3px,0); }
+  93% { opacity:.9;  transform:translate(-2px,0); }
+  95% { opacity:0;   transform:none; }
+}
+@keyframes gb {
+  0%,88%,96%,100% { opacity:0; transform:none; }
+  89% { opacity:.75; transform:translate(5px,0); }
+  91% { opacity:.4;  transform:translate(-3px,0); }
+  93% { opacity:.8;  transform:translate(2px,0); }
+  95% { opacity:0;   transform:none; }
+}
+
+.site-subtitle {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  color: var(--grey2);
+  text-transform: uppercase;
+  margin-top: 0.85rem;
+}
+
+/* Red accent line under the subtitle */
+.header-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+}
+.header-rule-line {
+  height: 1px;
+  width: 48px;
+  background: var(--red);
+}
+.header-rule-dot {
+  width: 4px; height: 4px;
+  background: var(--red);
+  transform: rotate(45deg);
+}
+
+/* ═══════════════════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════════════════ */
+.page-body {
+  max-width: var(--w);
+  margin: 0 auto;
+  padding: 0 1.5rem 6rem;
+}
+
+/* ── DMC5-style section label bar ── */
+.sec-bar {
+  display: flex;
+  align-items: stretch;
+  height: 2rem;
+  margin: 2.5rem 0 0;
+}
+.sec-bar-fill {
+  background: var(--red);
+  padding: 0 1.2rem 0 0.8rem;
+  display: flex;
+  align-items: center;
+  /* Parallelogram — DMC5's signature cut */
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 100%, 0 100%);
+  padding-right: 1.8rem;
+}
+.sec-bar-fill span {
+  font-family: var(--display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--white);
+  white-space: nowrap;
+}
+.sec-bar-line {
+  flex: 1;
+  border-bottom: 1px solid var(--border2);
+  margin-left: 0.75rem;
+  align-self: flex-end;
+}
+
+.sec-status {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--grey);
+  letter-spacing: 0.15em;
+  margin: 0.4rem 0 1rem;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MISSION LIST
+   ═══════════════════════════════════════════════════════ */
+.mission-list { list-style: none; }
+
+.mission-entry {
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  animation: ei .22s ease forwards;
+}
+.mission-entry:first-child { border-top: 1px solid var(--border); }
+.mission-entry:nth-child(1){animation-delay:.03s}
+.mission-entry:nth-child(2){animation-delay:.06s}
+.mission-entry:nth-child(3){animation-delay:.09s}
+.mission-entry:nth-child(4){animation-delay:.12s}
+.mission-entry:nth-child(5){animation-delay:.15s}
+.mission-entry:nth-child(6){animation-delay:.18s}
+@keyframes ei {
+  from { opacity:0; transform:translateX(-5px); }
+  to   { opacity:1; transform:none; }
+}
+
+.mission-link {
+  display: grid;
+  grid-template-columns: 3.8rem 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 0.4rem;
+  text-decoration: none;
+  color: inherit;
+  transition: background .12s;
+  cursor: pointer;
+}
+.mission-link:hover { background: var(--red-glow); }
+
+/* Circle counter — like DMC5's mission number in a square */
+.m-num {
+  width: 3.2rem;
+  height: 3.2rem;
+  border: 1px solid var(--red3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .12s, box-shadow .12s;
+  position: relative;
+}
+/* Small red corner ticks — DMC UI micro-detail */
+.m-num::before, .m-num::after {
+  content: '';
+  position: absolute;
+  width: 5px; height: 5px;
+  background: var(--red3);
+  transition: background .12s;
+}
+.m-num::before { top: -1px; left: -1px; }
+.m-num::after  { bottom: -1px; right: -1px; }
+.mission-link:hover .m-num {
+  border-color: var(--red);
+  box-shadow: 0 0 14px rgba(232,0,10,0.2), inset 0 0 8px rgba(232,0,10,0.05);
+}
+.mission-link:hover .m-num::before,
+.mission-link:hover .m-num::after { background: var(--red); }
+
+.m-num-n {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--red);
+  line-height: 1;
+}
+.m-num-s {
+  font-family: var(--mono);
+  font-size: 0.38rem;
+  color: var(--grey);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+.m-info { min-width: 0; }
+.m-title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--white);
+  transition: color .12s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mission-link:hover .m-title { color: var(--red); }
+.m-sub {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--grey);
+  margin-top: 2px;
+  letter-spacing: 0.06em;
+}
+
+/* S rank badge — right side */
+.m-rank {
+  text-align: right;
+  line-height: 1;
+}
+.m-rank-letter {
+  font-family: var(--display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: 2rem;
+  color: var(--red3);
+  transition: color .12s, text-shadow .12s;
+  display: block;
+}
+.mission-link:hover .m-rank-letter {
+  color: var(--red);
+  text-shadow: 0 0 16px rgba(232,0,10,0.5);
+}
+.m-rank-sub {
+  font-family: var(--mono);
+  font-size: 0.4rem;
+  color: var(--grey);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ARTIFACT PANEL
+   ═══════════════════════════════════════════════════════ */
+.artifact-panel {
+  margin-top: 1.75rem;
+  border: 1px solid var(--border2);
+  background: var(--bg2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 1.2rem 1.2rem 1.2rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+/* Top-left L bracket */
+.artifact-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 32px;
+  background: var(--red);
+}
+.artifact-panel::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 3px;
+  width: 32px; height: 3px;
+  background: var(--red);
+}
+
+.artifact-copy strong {
+  display: block;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 0.3rem;
+}
+.artifact-copy p {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--grey2);
+  letter-spacing: 0.05em;
+  line-height: 1.7;
+}
+
+/* DMC5-style parallelogram button */
+.btn-upload {
+  font-family: var(--display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--red);
+  border: none;
+  padding: 0.6rem 2rem;
+  cursor: pointer;
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  transition: background .12s, filter .12s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-upload:hover {
+  background: var(--red2);
+  filter: drop-shadow(0 0 10px rgba(232,0,10,0.45));
+}
+
+/* ═══════════════════════════════════════════════════════
+   MISSION / SCROLL PAGE
+   ═══════════════════════════════════════════════════════ */
+.scroll-page { padding-top: 1.5rem; }
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--grey2);
+  text-decoration: none;
+  margin-bottom: 1.75rem;
+  transition: color .12s;
+}
+.back-btn::before {
+  content: '';
+  display: block;
+  width: 20px; height: 1px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.back-btn:hover { color: var(--red); }
+
+/* Mission brief card */
+.mission-card {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  padding: 1.5rem;
+  margin-bottom: 1.75rem;
+  position: relative;
+  overflow: hidden;
+}
+.mission-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--red);
+}
+/* Faint diagonal slash right side */
+.mission-card::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(102deg,
+    transparent 35%,
+    rgba(232,0,10,0.03) 35%
+  );
+}
+
+.mc-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 0.5rem;
+}
+.mc-label::before { content: '// '; }
+
+.mc-title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 0.92;
+  color: var(--white);
+  margin-bottom: 0.9rem;
+}
+
+.mc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--grey2);
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+}
+.mc-meta span::before { content: '/ '; color: var(--red3); }
+
+/* File body */
+.file-body { margin-bottom: 2.5rem; }
+
+/* DMC drop cap — Oswald italic, red */
+.file-body p:first-child::first-letter {
+  font-family: var(--display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: 4.8em;
+  float: left;
+  line-height: 0.73;
+  margin: 0.04em 0.1em 0 0;
+  color: var(--red);
+  text-shadow: 0 0 30px rgba(232,0,10,0.35);
+}
+.file-body p {
+  margin-bottom: 1.2rem;
+  color: var(--offwhite);
+  font-size: 0.98rem;
+  font-weight: 400;
+  line-height: 1.78;
+}
+
+.file-footer {
+  border-top: 1px solid var(--border);
+  padding-top: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+/* ═══════════════════════════════════════════════════════
+   STATES
+   ═══════════════════════════════════════════════════════ */
+.state { text-align: center; padding: 5rem 1rem; }
+.state h2 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--red);
+  margin-bottom: 0.4rem;
+}
+.state p { font-family: var(--mono); font-size: 0.68rem; color: var(--grey); }
+.spin {
+  width: 28px; height: 28px;
+  margin: 0 auto 1.25rem;
+  border: 2px solid var(--border2);
+  border-top-color: var(--red);
+  border-radius: 50%;
+  animation: spin .6s linear infinite;
+  box-shadow: 0 0 8px rgba(232,0,10,0.2);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══════════════════════════════════════════════════════
+   MODAL
+   ═══════════════════════════════════════════════════════ */
+.veil {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.9);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  animation: vi .12s ease;
+}
+@keyframes vi { from { opacity:0; } to { opacity:1; } }
+
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  max-width: 460px; width: 100%;
+  overflow: hidden;
+  animation: mi .14s ease;
+  box-shadow: 0 0 50px rgba(232,0,10,0.08);
+}
+@keyframes mi { from { transform:translateY(8px); opacity:0; } to { transform:none; opacity:1; } }
+
+.modal-head {
+  background: var(--red);
+  padding: 0.6rem 1.2rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-head-title {
+  font-family: var(--display);
+  font-weight: 700; font-style: italic;
+  font-size: 0.9rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--white);
+}
+.modal-head-close {
+  font-family: var(--mono); font-size: 0.6rem;
+  color: rgba(255,255,255,.7); background: none; border: none;
+  cursor: pointer; letter-spacing: 0.1em; padding: 0;
+}
+.modal-head-close:hover { color: var(--white); }
+
+.modal-body { padding: 1.5rem; }
+.modal-desc {
+  font-family: var(--mono); font-size: 0.65rem;
+  color: var(--grey2); line-height: 1.7; letter-spacing: 0.04em;
+  margin-bottom: 1.2rem;
+}
+
+.file-inp {
+  display: block; width: 100%;
+  margin-bottom: 1.2rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--bg); border: 1px solid var(--border2);
+  color: var(--white); font-family: var(--mono); font-size: 0.68rem;
+  cursor: pointer; transition: border-color .1s;
+}
+.file-inp:hover { border-color: var(--red3); }
+.file-inp::-webkit-file-upload-button {
+  font-family: var(--display); font-weight: 700;
+  font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase;
+  background: var(--red3); color: var(--white);
+  border: none; padding: .28rem .7rem; margin-right: .7rem; cursor: pointer;
+}
+
+.modal-actions { display: flex; justify-content: flex-end; gap: 0.6rem; }
+.btn-cancel-m {
+  font-family: var(--display); font-weight: 500;
+  font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+  background: transparent; border: 1px solid var(--border2);
+  color: var(--grey2); padding: .48rem .9rem; cursor: pointer; transition: .1s;
+}
+.btn-cancel-m:hover { border-color: var(--grey); color: var(--white); }
+.btn-send {
+  font-family: var(--display); font-weight: 700; font-style: italic;
+  font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;
+  background: var(--red); border: none; color: var(--white);
+  padding: .48rem 1.2rem; cursor: pointer;
+  clip-path: polygon(7px 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
+  transition: background .1s;
+}
+.btn-send:hover { background: var(--red2); }
+
+.upload-res {
+  margin-top: .9rem; padding: .6rem .75rem;
+  font-family: var(--mono); font-size: .65rem;
+  line-height: 1.5; word-break: break-all; letter-spacing: .03em;
+  display: none;
+}
+.upload-res.ok {
+  display: block;
+  border-left: 2px solid var(--red); background: var(--red-glow);
+  color: var(--offwhite);
+}
+.upload-res.err {
+  display: block;
+  border-left: 2px solid var(--red3); background: rgba(100,0,6,.15);
+  color: #cc6666;
+}
+.upload-res strong { color: var(--red); font-weight: 400; }
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 580px) {
+  .header-inner { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .skull-mark { width: 50px; }
+  .mission-link { grid-template-columns: 3rem 1fr; }
+  .m-rank { display: none; }
+  .artifact-panel { flex-direction: column; align-items: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-title::before, .site-title::after { animation: none; }
+  .skull-mark { animation: none; }
+  .mission-entry { animation: none; opacity: 1; }
+  #fx-canvas { display: none; }
+}

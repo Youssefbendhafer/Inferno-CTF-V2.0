@@ -1,0 +1,8 @@
+{
+  "name": "dantes-codex-bot",
+  "version": "1.0.0",
+  "main": "bot.js",
+  "dependencies": {
+    "puppeteer-core": "^21.6.1"
+  }
+}
